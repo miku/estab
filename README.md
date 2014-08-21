@@ -48,7 +48,8 @@ Specify multiple indices:
 
 Multiple values are packed into a single value:
 
-    $ curl -XPOST localhost:9200/test/default/ -d '{"name": "Meltem", "color": ["green", "white"]}'
+    $ curl -XPOST localhost:9200/test/default/ \
+           -d '{"name": "Meltem", "color": ["green", "white"]}'
 
     $ estab -indices "test" -f "name color"
     Brian   green
