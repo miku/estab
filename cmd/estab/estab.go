@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net/url"
 	"strings"
 
 	"github.com/belogik/goes"
@@ -16,6 +15,11 @@ func main() {
 	port := flag.String("port", "9200", "elasticsearch port")
 	indicesString := flag.String("indices", "", "indices to search (or all)")
 	fieldsString := flag.String("f", "content.245.a", "field or fields space separated")
+	timeout := flag.String("timeout", "10m", "scroll timeout")
+	size := flag.Int("size", 10000, "scroll batch size")
+	nullValue := flag.String("null", "NOT_AVAILABLE", "value for empty fields")
+	separator := flag.String("separator", "|", "separator to use for multiple field values")
+	delimiter := flag.String("delimiter", "\t", "column delimiter")
 
 	flag.Parse()
 
@@ -34,26 +38,36 @@ func main() {
 		"fields": fields,
 	}
 
-	extraArgs := make(url.Values, 1)
-	searchResults, err := conn.Search(query, indices, []string{""}, extraArgs)
+	scanResponse, err := conn.Scan(query, indices, []string{""}, *timeout, *size)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	for _, hit := range searchResults.Hits.Hits {
-		var columns []string
-		for _, f := range fields {
-			switch value := hit.Fields[f].(type) {
-			case []interface{}:
-				var c []string
-				for _, e := range value {
-					c = append(c, e.(string))
-				}
-				columns = append(columns, strings.Join(c, "|"))
-			default:
-				log.Fatal("unknown field type in response")
-			}
-		}
-		fmt.Println(strings.Join(columns, "\t"))
-	}
 
+	for {
+		scrollResponse, err := conn.Scroll(scanResponse.ScrollId, *timeout)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		if len(scrollResponse.Hits.Hits) == 0 {
+			break
+		}
+		for _, hit := range scrollResponse.Hits.Hits {
+			var columns []string
+			for _, f := range fields {
+				var c []string
+				switch value := hit.Fields[f].(type) {
+				case nil:
+					c = []string{*nullValue}
+				case []interface{}:
+					for _, e := range value {
+						c = append(c, e.(string))
+					}
+				default:
+					log.Fatalf("unknown field type in response: %+v", hit.Fields[f])
+				}
+				columns = append(columns, strings.Join(c, *separator))
+			}
+			fmt.Println(strings.Join(columns, *delimiter))
+		}
+	}
 }
