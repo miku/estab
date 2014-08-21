@@ -33,3 +33,25 @@ Assuming an elasticsearch is running on localhost:9200.
     Brian   green
     Tim red
     Alice   yellow
+
+Specify multiple indices:
+
+    $ curl -XPOST localhost:9200/test2/default/ -d '{"name": "Yang", "color": "white"}'
+    $ curl -XPOST localhost:9200/test2/default/ -d '{"name": "Ying", "color": "black"}'
+
+    $ estab -indices "test test2" -f "name color"
+    Ying    black
+    Yang    white
+    Tim red
+    Alice   yellow
+    Brian   green
+
+Multiple values are packed into a single value:
+
+    $ curl -XPOST localhost:9200/test/default/ -d '{"name": "Meltem", "color": ["green", "white"]}'
+
+    $ estab -indices "test" -f "name color"
+    Brian   green
+    Meltem  green|white
+    Tim red
+    Alice   yellow
