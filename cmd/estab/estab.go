@@ -4,9 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
+	"runtime/pprof"
 	"strings"
 
 	"github.com/belogik/goes"
+	"github.com/miku/estab"
 )
 
 func main() {
@@ -20,8 +23,24 @@ func main() {
 	nullValue := flag.String("null", "NOT_AVAILABLE", "value for empty fields")
 	separator := flag.String("separator", "|", "separator to use for multiple field values")
 	delimiter := flag.String("delimiter", "\t", "column delimiter")
+	version := flag.Bool("v", false, "prints current program version")
+	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 
 	flag.Parse()
+
+	if *cpuprofile != "" {
+		f, err := os.Create(*cpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
+
+	if *version {
+		fmt.Println(estab.Version)
+		os.Exit(0)
+	}
 
 	var indices []string
 	trimmed := strings.TrimSpace(*indicesString)
