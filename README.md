@@ -38,7 +38,7 @@ Assuming an elasticsearch is running on localhost:9200.
 
     $ estab -indices "test" -f "name color"
     Brian   green
-    Tim red
+    Tim     red
     Alice   yellow
 
 Specify multiple indices:
@@ -49,7 +49,7 @@ Specify multiple indices:
     $ estab -indices "test test2" -f "name color"
     Ying    black
     Yang    white
-    Tim red
+    Tim     red
     Alice   yellow
     Brian   green
 
@@ -61,5 +61,5 @@ Multiple values are packed into a single value:
     $ estab -indices "test" -f "name color"
     Brian   green
     Meltem  green|white
-    Tim red
+    Tim     red
     Alice   yellow
