@@ -3,6 +3,13 @@ README
 
 Export elasticsearch document fields into tab separated values.
 
+Installation
+------------
+
+    $ go get github.com/miku/estab/cmd/estab
+
+Or if your system speaks `dpkg` or `rpm`, there is a [prerelease](github.com/miku/estab/releases).
+
 Usage
 -----
 
