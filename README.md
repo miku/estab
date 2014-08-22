@@ -8,7 +8,7 @@ Installation
 
     $ go get github.com/miku/estab/cmd/estab
 
-Or if your system speaks `dpkg` or `rpm`, there is a [prerelease](https://github.com/miku/estab/releases).
+Or if your system speaks `dpkg` or `rpm`, there is a [release](https://github.com/miku/estab/releases).
 
 Usage
 -----
