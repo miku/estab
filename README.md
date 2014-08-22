@@ -14,12 +14,13 @@ Usage
 -----
 
     $ estab -h
-    Usage of ./estab:
+    Usage of estab:
       -cpuprofile="": write cpu profile to file
       -delimiter="\t": column delimiter
-      -f="content.245.a": field or fields space separated
+      -f="_id _index": field or fields space separated
       -host="localhost": elasticsearch host
       -indices="": indices to search (or all)
+      -limit=0: maximum number of docs to return (return all by default)
       -null="NOT_AVAILABLE": value for empty fields
       -port="9200": elasticsearch port
       -separator="|": separator to use for multiple field values
