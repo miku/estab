@@ -99,7 +99,7 @@ func main() {
 							c = append(c, e.(string))
 						}
 					default:
-						log.Fatalf("unknown field type in response: %+v", hit.Fields[f])
+						log.Fatalf("unknown field type in response: %+v\n", hit.Fields[f])
 					}
 				}
 				columns = append(columns, strings.Join(c, *separator))
