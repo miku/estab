@@ -67,6 +67,8 @@ Multiple values are packed into a single value:
 Missing values get a special value via `-null`, which defaults to `NOT_AVAILABLE`:
 
     $ curl -XPOST localhost:9200/test/default/ -d '{"name": "Jin"}'
+
+    $ estab -indices "test" -f "name color"
     Brian   green
     Meltem  green|white
     Tim     red
