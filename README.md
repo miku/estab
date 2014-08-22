@@ -73,4 +73,4 @@ Missing values get a special value via `-null`, which defaults to `NOT_AVAILABLE
     Meltem  green|white
     Tim     red
     Alice   yellow
-    Jin NOT_AVAILABLE
+    Jin     NOT_AVAILABLE
