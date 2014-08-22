@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"runtime/pprof"
+	"strconv"
 	"strings"
 
 	"github.com/belogik/goes"
@@ -17,7 +18,7 @@ func main() {
 	host := flag.String("host", "localhost", "elasticsearch host")
 	port := flag.String("port", "9200", "elasticsearch port")
 	indicesString := flag.String("indices", "", "indices to search (or all)")
-	fieldsString := flag.String("f", "content.245.a", "field or fields space separated")
+	fieldsString := flag.String("f", "_id _index", "field or fields space separated")
 	timeout := flag.String("timeout", "10m", "scroll timeout")
 	size := flag.Int("size", 10000, "scroll batch size")
 	nullValue := flag.String("null", "NOT_AVAILABLE", "value for empty fields")
@@ -74,15 +75,26 @@ func main() {
 			var columns []string
 			for _, f := range fields {
 				var c []string
-				switch value := hit.Fields[f].(type) {
-				case nil:
-					c = []string{*nullValue}
-				case []interface{}:
-					for _, e := range value {
-						c = append(c, e.(string))
-					}
+				switch f {
+				case "_id":
+					c = append(c, hit.Id)
+				case "_index":
+					c = append(c, hit.Index)
+				case "_type":
+					c = append(c, hit.Type)
+				case "_score":
+					c = append(c, strconv.FormatFloat(hit.Score, 'f', 6, 64))
 				default:
-					log.Fatalf("unknown field type in response: %+v", hit.Fields[f])
+					switch value := hit.Fields[f].(type) {
+					case nil:
+						c = []string{*nullValue}
+					case []interface{}:
+						for _, e := range value {
+							c = append(c, e.(string))
+						}
+					default:
+						log.Fatalf("unknown field type in response: %+v", hit.Fields[f])
+					}
 				}
 				columns = append(columns, strings.Join(c, *separator))
 			}
