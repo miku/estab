@@ -63,3 +63,12 @@ Multiple values are packed into a single value:
     Meltem  green|white
     Tim     red
     Alice   yellow
+
+Missing values get a special value via `-null`, which defaults to `NOT_AVAILABLE`:
+
+    $ curl -XPOST localhost:9200/test/default/ -d '{"name": "Jin"}'
+    Brian   green
+    Meltem  green|white
+    Tim     red
+    Alice   yellow
+    Jin NOT_AVAILABLE
