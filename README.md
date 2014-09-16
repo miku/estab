@@ -27,6 +27,7 @@ Usage
       -limit=0: maximum number of docs to return (return all by default)
       -null="NOT_AVAILABLE": value for empty fields
       -port="9200": elasticsearch port
+      -query="": custom query to run
       -separator="|": separator to use for multiple field values
       -size=10000: scroll batch size
       -timeout="10m": scroll timeout
