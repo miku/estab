@@ -1,6 +1,8 @@
+// estab exports elasticsearch fields as tab separated values
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -27,6 +29,7 @@ func main() {
 	limit := flag.Int("limit", 0, "maximum number of docs to return (return all by default)")
 	version := flag.Bool("v", false, "prints current program version")
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
+	queryString := flag.String("query", "", "custom query to run")
 
 	flag.Parse()
 
@@ -52,11 +55,20 @@ func main() {
 
 	fields := strings.Fields(*fieldsString)
 	conn := goes.NewConnection(*host, *port)
-	var query = map[string]interface{}{
-		"query": map[string]interface{}{
-			"match_all": map[string]interface{}{},
-		},
-		"fields": fields,
+	var query map[string]interface{}
+	if *queryString == "" {
+		query = map[string]interface{}{
+			"query": map[string]interface{}{
+				"match_all": map[string]interface{}{},
+			},
+			"fields": fields,
+		}
+	} else {
+		err := json.Unmarshal([]byte(*queryString), &query)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		query["fields"] = fields
 	}
 
 	scanResponse, err := conn.Scan(query, indices, []string{""}, *timeout, *size)
