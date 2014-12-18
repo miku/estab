@@ -1,9 +1,9 @@
 Package: estab
-Version: 0.1.3
+Version: 0.2.0
 Section: utils
 Priority: optional
 Architecture: amd64
 Essential: no
 Depends: libc6 (>= 2.12)
 Maintainer: Martin Czygan
-Description: Export fields from Elasticsearch to tab-separated values (TSV).
+Description: Command line elasticsearch export tool. Exports TSV or raw documents.

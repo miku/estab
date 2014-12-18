@@ -1,6 +1,6 @@
 Summary:    Export fields from Elasticsearch as tab-separated values.
 Name:       estab
-Version:    0.1.3
+Version:    0.2.0
 Release:    0
 License:    MIT
 BuildArch:  x86_64
@@ -11,7 +11,7 @@ URL:        https://github.com/miku/estab
 
 %description
 
-Export fields from Elasticsearch as tab-separated values.
+Command line elasticsearch export tool. Exports TSV or raw documents.
 
 %prep
 # the set up macro unpacks the source bundle and changes in to the represented by
@@ -46,6 +46,11 @@ rm -rf %{_topdir}/BUILD/%{name}
 
 
 %changelog
+* Thu Dec 18 2014 Martin Czygan
+- 0.2.0 release
+- added -raw flag
+- use buffered output
+
 * Wed Sep 16 2014 Martin Czygan
 - 0.1.3 release
 - add custom query support
