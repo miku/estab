@@ -24,10 +24,11 @@ Usage
       -f="_id _index": field or fields space separated
       -host="localhost": elasticsearch host
       -indices="": indices to search (or all)
-      -limit=0: maximum number of docs to return (return all by default)
+      -limit=-1: maximum number of docs to return (return all by default)
       -null="NOT_AVAILABLE": value for empty fields
       -port="9200": elasticsearch port
       -query="": custom query to run
+      -raw=false: stream out the raw json records
       -separator="|": separator to use for multiple field values
       -size=10000: scroll batch size
       -timeout="10m": scroll timeout
@@ -80,3 +81,17 @@ Missing values get a special value via `-null`, which defaults to `NOT_AVAILABLE
     Tim     red
     Alice   yellow
     Jin     NOT_AVAILABLE
+
+In 0.2.0 a `-raw` flag was added that will stream out the full JSON documents:
+
+    $ estab -indices test -raw
+    {"_index":"test","_type":"default","_id":"...BvA4z","_score":0,"_source":{...}}
+    {"_index":"test","_type":"default","_id":"...BvA40","_score":0,"_source":{...}}
+    {"_index":"test","_type":"default","_id":"...BvA41","_score":0,"_source":{...}}
+
+This can be fed into json processors like [jq](http://stedolan.github.io/jq/):
+
+    $ estab -indices test -raw | jq --raw-output '._source.color'
+    red
+    yellow
+    green
