@@ -2,6 +2,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -30,6 +31,7 @@ func main() {
 	version := flag.Bool("v", false, "prints current program version")
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	queryString := flag.String("query", "", "custom query to run")
+	raw := flag.Bool("raw", false, "stream out the raw json records")
 
 	flag.Parse()
 
@@ -47,35 +49,35 @@ func main() {
 		os.Exit(0)
 	}
 
-	var indices []string
-	trimmed := strings.TrimSpace(*indicesString)
-	if len(trimmed) > 0 {
-		indices = strings.Fields(trimmed)
-	}
-
-	fields := strings.Fields(*fieldsString)
-	conn := goes.NewConnection(*host, *port)
 	var query map[string]interface{}
 	if *queryString == "" {
 		query = map[string]interface{}{
 			"query": map[string]interface{}{
 				"match_all": map[string]interface{}{},
 			},
-			"fields": fields,
 		}
 	} else {
 		err := json.Unmarshal([]byte(*queryString), &query)
 		if err != nil {
 			log.Fatal(err)
 		}
+	}
+
+	indices := strings.Fields(*indicesString)
+	fields := strings.Fields(*fieldsString)
+
+	if !*raw {
 		query["fields"] = fields
 	}
 
+	conn := goes.NewConnection(*host, *port)
 	scanResponse, err := conn.Scan(query, indices, []string{""}, *timeout, *size)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	w := bufio.NewWriter(os.Stdout)
+	defer w.Flush()
 	i := 0
 
 	for {
@@ -89,6 +91,14 @@ func main() {
 		for _, hit := range scrollResponse.Hits.Hits {
 			if i == *limit {
 				return
+			}
+			if *raw {
+				b, err := json.Marshal(hit)
+				if err != nil {
+					log.Fatal(err)
+				}
+				fmt.Fprintln(w, string(b))
+				continue
 			}
 			var columns []string
 			for _, f := range fields {
@@ -116,7 +126,7 @@ func main() {
 				}
 				columns = append(columns, strings.Join(c, *separator))
 			}
-			fmt.Println(strings.Join(columns, *delimiter))
+			fmt.Fprintln(w, strings.Join(columns, *delimiter))
 			i++
 		}
 	}
