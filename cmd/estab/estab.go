@@ -66,14 +66,14 @@ func main() {
 	} else {
 		err := json.Unmarshal([]byte(*queryString), &query)
 		if err != nil {
-			log.Fatalln(err)
+			log.Fatal(err)
 		}
 		query["fields"] = fields
 	}
 
 	scanResponse, err := conn.Scan(query, indices, []string{""}, *timeout, *size)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatal(err)
 	}
 
 	i := 0
@@ -81,7 +81,7 @@ func main() {
 	for {
 		scrollResponse, err := conn.Scroll(scanResponse.ScrollId, *timeout)
 		if err != nil {
-			log.Fatalln(err)
+			log.Fatal(err)
 		}
 		if len(scrollResponse.Hits.Hits) == 0 {
 			break
