@@ -26,7 +26,7 @@ func main() {
 	nullValue := flag.String("null", "NOT_AVAILABLE", "value for empty fields")
 	separator := flag.String("separator", "|", "separator to use for multiple field values")
 	delimiter := flag.String("delimiter", "\t", "column delimiter")
-	limit := flag.Int("limit", 0, "maximum number of docs to return (return all by default)")
+	limit := flag.Int("limit", -1, "maximum number of docs to return (return all by default)")
 	version := flag.Bool("v", false, "prints current program version")
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	queryString := flag.String("query", "", "custom query to run")
@@ -76,7 +76,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	counter := 0
+	i := 0
 
 	for {
 		scrollResponse, err := conn.Scroll(scanResponse.ScrollId, *timeout)
@@ -87,7 +87,7 @@ func main() {
 			break
 		}
 		for _, hit := range scrollResponse.Hits.Hits {
-			if *limit > 0 && counter == *limit {
+			if i == *limit {
 				return
 			}
 			var columns []string
@@ -117,7 +117,7 @@ func main() {
 				columns = append(columns, strings.Join(c, *separator))
 			}
 			fmt.Println(strings.Join(columns, *delimiter))
-			counter++
+			i++
 		}
 	}
 }
