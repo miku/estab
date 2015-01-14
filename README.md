@@ -19,6 +19,7 @@ Usage
 
     $ estab -h
     Usage of estab:
+      -1=false: one value per line (works only with a single column in -f)
       -cpuprofile="": write cpu profile to file
       -delimiter="\t": column delimiter
       -f="_id _index": field or fields space separated
@@ -95,3 +96,13 @@ This can be fed into json processors like [jq](http://stedolan.github.io/jq/):
     red
     yellow
     green
+
+In 0.2.1 a `-1` flag was added:
+
+    $ estab -indices "test" -f "color" -1
+    green
+    green
+    white
+    red
+    yellow
+    NOT_AVAILABLE
