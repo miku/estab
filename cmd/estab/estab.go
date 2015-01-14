@@ -32,6 +32,7 @@ func main() {
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	queryString := flag.String("query", "", "custom query to run")
 	raw := flag.Bool("raw", false, "stream out the raw json records")
+	singleValue := flag.Bool("1", false, "one value per line (only when just a single column is given in -f)")
 
 	flag.Parse()
 
@@ -65,6 +66,14 @@ func main() {
 
 	indices := strings.Fields(*indicesString)
 	fields := strings.Fields(*fieldsString)
+
+	if *raw && *singleValue {
+		log.Fatal("-1 xor -raw ")
+	}
+
+	if *singleValue && len(fields) > 1 {
+		log.Fatalf("-1 works only with a single column, %d given: %s\n", len(fields), strings.Join(fields, " "))
+	}
 
 	if !*raw {
 		query["fields"] = fields
@@ -124,9 +133,17 @@ func main() {
 						log.Fatalf("unknown field type in response: %+v\n", hit.Fields[f])
 					}
 				}
-				columns = append(columns, strings.Join(c, *separator))
+				if *singleValue {
+					for _, value := range c {
+						fmt.Fprintln(w, value)
+					}
+				} else {
+					columns = append(columns, strings.Join(c, *separator))
+				}
 			}
-			fmt.Fprintln(w, strings.Join(columns, *delimiter))
+			if !*singleValue {
+				fmt.Fprintln(w, strings.Join(columns, *delimiter))
+			}
 			i++
 		}
 	}
