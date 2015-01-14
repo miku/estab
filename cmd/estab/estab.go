@@ -32,7 +32,7 @@ func main() {
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	queryString := flag.String("query", "", "custom query to run")
 	raw := flag.Bool("raw", false, "stream out the raw json records")
-	singleValue := flag.Bool("1", false, "one value per line (only when just a single column is given in -f)")
+	singleValue := flag.Bool("1", false, "one value per line (works only with a single column in -f)")
 
 	flag.Parse()
 
