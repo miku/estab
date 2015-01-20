@@ -33,6 +33,7 @@ func main() {
 	queryString := flag.String("query", "", "custom query to run")
 	raw := flag.Bool("raw", false, "stream out the raw json records")
 	singleValue := flag.Bool("1", false, "one value per line (works only with a single column in -f)")
+	zeroAsNull := flag.Bool("zero-as-null", false, "treat zero length strings as null values")
 
 	flag.Parse()
 
@@ -127,7 +128,13 @@ func main() {
 						c = []string{*nullValue}
 					case []interface{}:
 						for _, e := range value {
-							c = append(c, e.(string))
+							s := e.(string)
+							if s == "" && *zeroAsNull {
+								c = append(c, *nullValue)
+							} else {
+								c = append(c, e.(string))
+							}
+
 						}
 					default:
 						log.Fatalf("unknown field type in response: %+v\n", hit.Fields[f])

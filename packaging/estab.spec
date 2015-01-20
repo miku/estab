@@ -1,6 +1,6 @@
 Summary:    Export fields from Elasticsearch as tab-separated values.
 Name:       estab
-Version:    0.2.1
+Version:    0.2.2
 Release:    0
 License:    MIT
 BuildArch:  x86_64
@@ -46,6 +46,10 @@ rm -rf %{_topdir}/BUILD/%{name}
 
 
 %changelog
+* Tue Jan 20 2015 Martin Czygan
+- 0.2.2 release
+- added -zero-as-null flag
+
 * Thu Dec 18 2014 Martin Czygan
 - 0.2.0 release
 - added -raw flag
