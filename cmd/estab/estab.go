@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"runtime/pprof"
@@ -92,6 +93,9 @@ func main() {
 
 	for {
 		scrollResponse, err := conn.Scroll(scanResponse.ScrollId, *timeout)
+		if err == io.EOF {
+			break
+		}
 		if err != nil {
 			log.Fatal(err)
 		}
