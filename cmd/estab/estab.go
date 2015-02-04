@@ -35,6 +35,7 @@ func main() {
 	raw := flag.Bool("raw", false, "stream out the raw json records")
 	singleValue := flag.Bool("1", false, "one value per line (works only with a single column in -f)")
 	zeroAsNull := flag.Bool("zero-as-null", false, "treat zero length strings as null values")
+	precision := flag.Int("precision", 0, "precision for numeric output")
 
 	flag.Parse()
 
@@ -132,13 +133,17 @@ func main() {
 						c = []string{*nullValue}
 					case []interface{}:
 						for _, e := range value {
-							s := e.(string)
-							if s == "" && *zeroAsNull {
-								c = append(c, *nullValue)
-							} else {
-								c = append(c, e.(string))
+							switch e.(type) {
+							case string:
+								s := e.(string)
+								if s == "" && *zeroAsNull {
+									c = append(c, *nullValue)
+								} else {
+									c = append(c, e.(string))
+								}
+							case float64:
+								c = append(c, strconv.FormatFloat(e.(float64), 'f', *precision, 64))
 							}
-
 						}
 					default:
 						log.Fatalf("unknown field type in response: %+v\n", hit.Fields[f])

@@ -28,6 +28,7 @@ Usage
       -limit=-1: maximum number of docs to return (return all by default)
       -null="NOT_AVAILABLE": value for empty fields
       -port="9200": elasticsearch port
+      -precision=0: precision for numeric output
       -query="": custom query to run
       -raw=false: stream out the raw json records
       -separator="|": separator to use for multiple field values
