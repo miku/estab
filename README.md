@@ -35,6 +35,7 @@ Usage
       -size=10000: scroll batch size
       -timeout="10m": scroll timeout
       -v=false: prints current program version
+      -zero-as-null=false: treat zero length strings as null values
 
 Example
 -------
