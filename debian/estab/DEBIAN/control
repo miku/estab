@@ -5,5 +5,5 @@ Priority: optional
 Architecture: amd64
 Essential: no
 Depends: libc6 (>= 2.12)
-Maintainer: Martin Czygan
+Maintainer: Martin Czygan <martin.czygan@gmail.com>
 Description: Command line elasticsearch export tool. Exports TSV or raw documents.
