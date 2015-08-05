@@ -33,6 +33,7 @@ func main() {
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	queryString := flag.String("query", "", "custom query to run")
 	raw := flag.Bool("raw", false, "stream out the raw json records")
+	header := flag.Bool("header", false, "output header row with thie field names")
 	singleValue := flag.Bool("1", false, "one value per line (works only with a single column in -f)")
 	zeroAsNull := flag.Bool("zero-as-null", false, "treat zero length strings as null values")
 	precision := flag.Int("precision", 0, "precision for numeric output")
@@ -92,6 +93,10 @@ func main() {
 	defer w.Flush()
 	i := 0
 
+    if *header {
+		fmt.Fprintln(w, strings.Join(fields, *delimiter))		
+	}
+	
 	for {
 		scrollResponse, err := conn.Scroll(scanResponse.ScrollId, *timeout)
 		if err == io.EOF {
@@ -115,6 +120,7 @@ func main() {
 				fmt.Fprintln(w, string(b))
 				continue
 			}
+			
 			var columns []string
 			for _, f := range fields {
 				var c []string
