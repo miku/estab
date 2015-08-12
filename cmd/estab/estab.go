@@ -120,7 +120,7 @@ func main() {
 				fmt.Fprintln(w, string(b))
 				continue
 			}
-			
+
 			var columns []string
 			for _, f := range fields {
 				var c []string
