@@ -23,6 +23,7 @@ Usage
       -cpuprofile="": write cpu profile to file
       -delimiter="\t": column delimiter
       -f="_id _index": field or fields space separated
+      -header=false: output header row with field names
       -host="localhost": elasticsearch host
       -indices="": indices to search (or all)
       -limit=-1: maximum number of docs to return (return all by default)
