@@ -149,6 +149,8 @@ func main() {
 								}
 							case float64:
 								c = append(c, strconv.FormatFloat(e.(float64), 'f', *precision, 64))
+							case bool:
+								c = append(c, strconv.FormatBool(e.(bool)))
 							}
 						}
 					default:
