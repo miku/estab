@@ -1,7 +1,9 @@
 estab
 =====
 
-Please see [esdump](https://github.com/miku/esdump) for a alternative elasticsearch command line export tool.
+estab is not maintained any more. Please have a look at
+[esdump](https://github.com/miku/esdump) for a similar elasticsearch command
+line export tool.
 
 ----
 
