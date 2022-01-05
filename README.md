@@ -1,6 +1,10 @@
 estab
 =====
 
+Please see [esdump](https://github.com/miku/esdump) for a alternative elasticsearch command line export tool.
+
+----
+
 Export elasticsearch document fields into tab separated values. `estab`
 uses the [scan search type](http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/scan-scroll.html)
 and the scroll API, which help
